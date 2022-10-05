@@ -8,9 +8,11 @@ const StyledWindow = styled.div`
   height: 480px;
   font-family: 'DotGothic16', sans-serif;
   white-space: pre-wrap;
+  border: solid 2px #eee;
+  padding: 10px;
+  font-size: 16px;
 `
 const Top: React.FC = () => {
-  const { characters } = useHooks()
   return (
     <StyledWrapper>
       <Battle
@@ -27,13 +29,14 @@ const Battle: React.FC<{ monsterData: Character; playerData: Character }> = ({
   const [characters, setCharacters] = useState([playerData, monsterData])
   const player = characters[monsterType.MONSTER_PLAYER]
   const monster = characters[monsterType.MONSTER_SLIME]
+  const { message } = useHooks(characters)
   return (
     <StyledWindow>{`${player.name}
 HP:${player.hp}/${player.maxHp} MP:${player.mp}/${player.maxMp}
 
 ${monster.aa} ( HP: ${monster.hp}/${monster.maxHp} )
 
-${monster.name} があらわれた！`}</StyledWindow>
+${message}`}</StyledWindow>
   )
 }
 export default Top
@@ -44,36 +47,55 @@ interface Character {
   maxMp: number
   name: string
   aa: string
+  command: Command
 }
 const monsterType = {
   MONSTER_PLAYER: 0,
   MONSTER_SLIME: 1,
   MONSTER_MONSTER: 2,
 } as const
+const commands = {
+  COMMAND_FIGHT: 0,
+  COMMAND_SPELL: 1,
+  COMMAND_RUN: 2,
+  COMMAND_MAX: 3,
+} as const
+type Command = typeof commands[keyof typeof commands]
+const defaultMonster = {
+  hp: 0,
+  maxHp: 0,
+  mp: 0,
+  maxMp: 0,
+  name: '',
+  aa: '',
+  command: commands.COMMAND_FIGHT,
+} as const
 const monsters: readonly Character[] = [
   {
+    ...defaultMonster,
     hp: 15,
     maxHp: 15,
     mp: 15,
     maxMp: 15,
     name: 'ゆうしゃ',
-    aa: '',
   },
   {
+    ...defaultMonster,
     hp: 3,
     maxHp: 3,
-    mp: 0,
-    maxMp: 0,
     name: 'スライム',
     aa: `／・Д・＼
 ～～～～～`,
   },
 ] as const
 
-const useHooks = () => {
-  const [characters, setCharacters] = useState(monsters)
-  const init = () => {
-    setCharacters(monsters)
+const useHooks = (characters: Character[]) => {
+  const [player, monster] = characters
+  for (const c of characters) {
+    switch (c.command) {
+      case commands.COMMAND_FIGHT:
+        return { message: `${c.name} の攻撃！` }
+    }
   }
-  return { characters }
+  return { message: `${monster.name} があらわれた！` }
 }
