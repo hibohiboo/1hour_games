@@ -11,17 +11,30 @@ const StyledWindow = styled.div`
 `
 const Top: React.FC = () => {
   const { characters } = useHooks()
-  const player = characters[monsterType.MONSTER_PLAYER]
   return (
     <StyledWrapper>
-      <StyledWindow>{`${player.name}
-HP: ${player.hp} MP:${player.mp}/${player.maxMp}
-      
-      `}</StyledWindow>
+      <Battle
+        playerData={monsters[monsterType.MONSTER_PLAYER]}
+        monsterData={monsters[monsterType.MONSTER_SLIME]}
+      />
     </StyledWrapper>
   )
 }
+const Battle: React.FC<{ monsterData: Character; playerData: Character }> = ({
+  monsterData,
+  playerData,
+}) => {
+  const [characters, setCharacters] = useState([playerData, monsterData])
+  const player = characters[monsterType.MONSTER_PLAYER]
+  const monster = characters[monsterType.MONSTER_SLIME]
+  return (
+    <StyledWindow>{`${player.name}
+HP:${player.hp}/${player.maxHp} MP:${player.mp}/${player.maxMp}
 
+${monster.aa} ( HP: ${monster.hp}/${monster.maxHp} )
+`}</StyledWindow>
+  )
+}
 export default Top
 interface Character {
   hp: number
@@ -29,21 +42,33 @@ interface Character {
   mp: number
   maxMp: number
   name: string
+  aa: string
 }
 const monsterType = {
   MONSTER_PLAYER: 0,
+  MONSTER_SLIME: 1,
   MONSTER_MONSTER: 2,
 } as const
-const monsters: Character[] = [
+const monsters: readonly Character[] = [
   {
     hp: 15,
     maxHp: 15,
     mp: 15,
     maxMp: 15,
     name: 'ゆうしゃ',
+    aa: '',
   },
-]
-const init = () => {}
+  {
+    hp: 3,
+    maxHp: 3,
+    mp: 0,
+    maxMp: 0,
+    name: 'スライム',
+    aa: `／・Д・＼
+～～～～～`,
+  },
+] as const
+
 const useHooks = () => {
   const [characters, setCharacters] = useState(monsters)
   const init = () => {
