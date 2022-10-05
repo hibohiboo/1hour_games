@@ -7,6 +7,7 @@ import { basePath } from '../../paths'
 import reportWebVitals from '@/reportWebVitals'
 import App from '@/router/RoutesApp'
 import { store } from '@/store'
+import './index.scss'
 
 const elementId = 'react-root'
 const container = document.getElementById(elementId)
