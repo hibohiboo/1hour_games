@@ -29,5 +29,6 @@
     "./cdk/constants",
     "paths.ts",
     "tmp/eventTables.ts"
-  ]
+  ],
+  "exclude": ["./tmp"]
 }
