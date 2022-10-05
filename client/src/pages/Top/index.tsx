@@ -89,10 +89,20 @@ const monsters: readonly Character[] = [
 ～～～～～`,
   },
 ] as const
-
+const selectCommandMessage = (
+  selectedCommand: Command,
+  commands: readonly string[],
+) => {
+  return commands.map((c, index) =>
+    // eslint-disable-next-line no-irregular-whitespace
+    index === selectedCommand ? `＞${c}` : `　${c}`,
+  )
+}
 const useHooks = (characters: Character[]) => {
   const [player, monster] = characters
-  return { message: `${commandNames.join('\n')}` }
+  return {
+    message: `${selectCommandMessage(player.command, commandNames).join('\n')}`,
+  }
   for (const c of characters) {
     switch (c.command) {
       case commands.COMMAND_FIGHT:
