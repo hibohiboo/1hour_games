@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 const StyledWrapper = styled.div`
   padding: 20px;
@@ -100,14 +100,27 @@ const selectCommandMessage = (
 }
 const useHooks = (characters: Character[]) => {
   const [player, monster] = characters
-  return {
-    message: `${selectCommandMessage(player.command, commandNames).join('\n')}`,
-  }
+  const [state, setState] = useState({
+    message: `${monster.name} があらわれた！`,
+  })
+  const [gen] = useState(battleLoop(characters))
+  useEffect(() => {
+    const nextState = gen.next().value
+    if (nextState) setState(nextState)
+  })
+
+  return state
+}
+
+function* battleLoop(characters: Character[]) {
+  const [player, monster] = characters
+  yield { message: `${monster.name} があらわれた！` }
   for (const c of characters) {
     switch (c.command) {
       case commands.COMMAND_FIGHT:
-        return { message: `${c.name} の攻撃！` }
+        yield { message: `${c.name} の攻撃！` }
     }
+    yield { message: `${monster.name} があらわれた！` }
   }
-  return { message: `${monster.name} があらわれた！` }
+  yield { message: `${monster.name} があらわれた！` }
 }
