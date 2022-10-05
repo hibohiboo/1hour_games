@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from '..'
-import { eventTablesAdapter } from '../slices/eventTables'
+import { eventTablesAdapter } from '../../../../tmp/eventTables'
 import { selectedParagraphIdSelector } from './paragraph'
 
 const eventTablesSelector = (state: RootState) => state.eventTables
