@@ -60,6 +60,7 @@ const commands = {
   COMMAND_RUN: 2,
   COMMAND_MAX: 3,
 } as const
+const commandNames = ['たたかう', 'じゅもん', 'にげる'] as const
 type Command = typeof commands[keyof typeof commands]
 const defaultMonster = {
   hp: 0,
@@ -91,6 +92,7 @@ const monsters: readonly Character[] = [
 
 const useHooks = (characters: Character[]) => {
   const [player, monster] = characters
+  return { message: `${commandNames.join('\n')}` }
   for (const c of characters) {
     switch (c.command) {
       case commands.COMMAND_FIGHT:
