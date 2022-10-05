@@ -1,7 +1,7 @@
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import { terser } from 'rollup-plugin-terser'
 import { defineConfig } from 'vite'
-import { basePath } from './cdk/constants/paths'
+import { basePath } from './paths'
 
 // console.log(process.env)
 // https://vitejs.dev/config/

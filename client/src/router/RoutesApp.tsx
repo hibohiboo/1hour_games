@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import Journey from '@/components/pages/Journey'
 import useRouterApp from '@/hooks/useRouterApp'
+import Top from '@/pages/Top'
 
 const App: React.FC = () => {
   const { authenticated } = useRouterApp()
@@ -10,12 +10,12 @@ const App: React.FC = () => {
   if (!authenticated) {
     return <div>loading...</div>
   }
-  if (!location.pathname.startsWith('/journey')) {
-    return <Navigate to="/journey" replace />
+  if (!location.pathname.startsWith('/')) {
+    return <Navigate to="/" replace />
   }
   return (
     <Routes>
-      <Route path="/journey" element={<Journey />} />
+      <Route path="/" element={<Top />} />
     </Routes>
   )
 }
