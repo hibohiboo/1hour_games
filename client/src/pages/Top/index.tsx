@@ -32,7 +32,8 @@ const Battle: React.FC<{ monsterData: Character; playerData: Character }> = ({
 HP:${player.hp}/${player.maxHp} MP:${player.mp}/${player.maxMp}
 
 ${monster.aa} ( HP: ${monster.hp}/${monster.maxHp} )
-`}</StyledWindow>
+
+${monster.name} があらわれた！`}</StyledWindow>
   )
 }
 export default Top
