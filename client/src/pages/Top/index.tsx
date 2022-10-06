@@ -107,9 +107,14 @@ const useHooks = (characters: Character[]) => {
     message: `${monster.name} があらわれた！`,
   })
 
-  useKey(['Enter'], () => {
-    const nextState = gen.next().value
-    if (nextState) setState(nextState)
+  useKey(['Enter', 'w', 's'], (key) => {
+    switch (key) {
+      case 'Enter': {
+        const nextState = gen.next(false).value
+        if (nextState) setState(nextState)
+        return
+      }
+    }
   })
 
   return state
@@ -117,11 +122,20 @@ const useHooks = (characters: Character[]) => {
 
 function* battleLoop(characters: Character[]) {
   const [player, monster] = characters
+
   while (true) {
+    let commandSelecting = true
+    while (commandSelecting) {
+      commandSelecting = yield {
+        message: `${selectCommandMessage(player.command, commandNames).join(
+          '\n',
+        )}`,
+      }
+    }
     for (const c of characters) {
       switch (c.command) {
         case commands.COMMAND_FIGHT:
-          yield { message: `${c.name} の攻撃！` }
+          yield { message: `${c.name} の攻撃！`, commandSelecting }
       }
     }
   }
