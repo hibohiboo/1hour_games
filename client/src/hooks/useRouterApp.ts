@@ -1,7 +1,5 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '@/domain/firebase'
 import { useAppSelector } from '@/store/hooks'
 import { isUserAuthenticatedSelector } from '@/store/selectors/auth'
 import { login } from '@/store/slices/auth'
@@ -20,17 +18,17 @@ const useRouterApp = () => {
     },
     [dispatch],
   )
-  useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        dispatch(login({}))
-      }
-      if (authenticated) return
-      if (user) {
-        return await refresh(user.uid)
-      }
-    })
-  }, [dispatch, refresh, authenticated])
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, async (user) => {
+  //     if (!user) {
+  //       dispatch(login({}))
+  //     }
+  //     if (authenticated) return
+  //     if (user) {
+  //       return await refresh(user.uid)
+  //     }
+  //   })
+  // }, [dispatch, refresh, authenticated])
   return { authenticated }
 }
 

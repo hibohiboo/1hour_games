@@ -3,8 +3,6 @@ import {
   createSlice,
   SerializedError,
 } from '@reduxjs/toolkit'
-import { signInAnonymously } from 'firebase/auth'
-import { auth } from '@/domain/firebase'
 
 interface AuthState {
   uid?: string
@@ -27,8 +25,7 @@ export const login = createAsyncThunk<AuthState, PayLoad>(
   async (req, thunkAPI) => {
     try {
       if (req.uid == null) {
-        const response = await signInAnonymously(auth)
-        const uid = response.user?.uid
+        const uid = ''
         return { uid }
       }
       const uid = req.uid
@@ -41,7 +38,7 @@ export const login = createAsyncThunk<AuthState, PayLoad>(
 
 export const logout = createAsyncThunk('logout', async (_, thunkAPI) => {
   try {
-    await auth.signOut()
+    // logout
   } catch (error: any) {
     return thunkAPI.rejectWithValue({ error: error.message })
   }
