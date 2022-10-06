@@ -172,9 +172,16 @@ function* battleLoop(characters: Character[]) {
           const damage = Math.floor(1 + Math.random() * c.attack)
           const target = characters[c.target]
           target.hp = target.hp - damage
+          target.hp = target.hp < 0 ? 0 : target.hp
           yield {
             message: `${target.name} に${damage}のダメージ！`,
             player,
+          }
+          if (target.hp === 0) {
+            return {
+              message: `${target.name} をたおした！`,
+              player,
+            }
           }
         }
       }
