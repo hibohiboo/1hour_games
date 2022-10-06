@@ -49,6 +49,7 @@ interface Character {
   name: string
   aa: string
   command: Command
+  target: number
 }
 const monsterType = {
   MONSTER_PLAYER: 0,
@@ -71,6 +72,7 @@ const defaultMonster = {
   name: '',
   aa: '',
   command: commands.COMMAND_FIGHT,
+  target: 0,
 } as const
 const monsters: readonly Character[] = [
   {
@@ -104,7 +106,7 @@ const useHooks = (characters: Character[]) => {
 
   const [gen] = useState(battleLoop(characters))
   const [state, setState] = useState({
-    message: `${monster.name} があらわれた！`,
+    message: `${monster.name} があらわれた！` + `\n\nEnterキーでスタート`,
     player,
   })
 
@@ -146,6 +148,8 @@ const useHooks = (characters: Character[]) => {
 
 function* battleLoop(characters: Character[]) {
   const [player, monster] = characters
+  player.target = 1
+  monster.target = 0
 
   while (true) {
     let commandSelecting = true
