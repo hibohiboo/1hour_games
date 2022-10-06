@@ -50,6 +50,7 @@ interface Character {
   aa: string
   command: Command
   target: number
+  attack: number
 }
 const monsterType = {
   MONSTER_PLAYER: 0,
@@ -73,6 +74,7 @@ const defaultMonster = {
   aa: '',
   command: commands.COMMAND_FIGHT,
   target: 0,
+  attack: 0,
 } as const
 const monsters: readonly Character[] = [
   {
@@ -82,6 +84,7 @@ const monsters: readonly Character[] = [
     mp: 15,
     maxMp: 15,
     name: 'ゆうしゃ',
+    attack: 3,
   },
   {
     ...defaultMonster,
@@ -90,6 +93,7 @@ const monsters: readonly Character[] = [
     name: 'スライム',
     aa: `／・Д・＼
 ～～～～～`,
+    attack: 2,
   },
 ] as const
 const selectCommandMessage = (
@@ -163,8 +167,16 @@ function* battleLoop(characters: Character[]) {
     }
     for (const c of characters) {
       switch (c.command) {
-        case commands.COMMAND_FIGHT:
+        case commands.COMMAND_FIGHT: {
           yield { message: `${c.name} の攻撃！`, player }
+          const damage = Math.floor(1 + Math.random() * c.attack)
+          const target = characters[c.target]
+          target.hp = target.hp - damage
+          yield {
+            message: `${target.name} に${damage}のダメージ！`,
+            player,
+          }
+        }
       }
     }
   }
