@@ -108,29 +108,31 @@ const useHooks = (characters: Character[]) => {
     player,
   })
 
-  useKey(['Enter', 'w', 's'], (key) => {
+  useKey(['Enter', 'w', 's', 'ArrowDown', 'ArrowUp'], (key) => {
     switch (key) {
       case 'Enter': {
         const nextState = gen.next(false).value
         if (nextState) setState(nextState)
         return
       }
+      case 'ArrowUp':
       case 'w': {
-        state.player.command = ((state.player.command + 1) %
-          commands.COMMAND_MAX) as Command
-        const nextState = gen.next(true).value
-
-        if (nextState) {
-          setState(nextState)
-        }
-        return
-      }
-      case 's': {
         state.player.command = ((state.player.command -
           1 +
           commands.COMMAND_MAX) %
           commands.COMMAND_MAX) as Command
         const nextState = gen.next(true).value
+        if (nextState) {
+          setState(nextState)
+        }
+        return
+      }
+      case 'ArrowDown':
+      case 's': {
+        state.player.command = ((state.player.command + 1) %
+          commands.COMMAND_MAX) as Command
+        const nextState = gen.next(true).value
+
         if (nextState) {
           setState(nextState)
         }
