@@ -68,6 +68,7 @@ const commands = {
   COMMAND_MAX: 3,
 } as const
 const commandNames = ['たたかう', 'じゅもん', 'にげる'] as const
+const SPELL_COST = 3
 type Command = typeof commands[keyof typeof commands]
 const defaultMonster = {
   hp: 0,
@@ -206,6 +207,7 @@ function* battleLoop(characters: Character[]) {
           return { message: `${player.name}は にげだした！`, player }
         }
         case commands.COMMAND_SPELL: {
+          player.mp -= SPELL_COST
           yield { message: `${player.name}は ヒールを となえた！`, player }
           player.hp = monsters[monsterType.MONSTER_PLAYER].maxHp
           yield { message: `${player.name}のきずが かいふくした！`, player }
