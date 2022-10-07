@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { CSSProperties, useState } from 'react'
 import styled from 'styled-components'
 import { useKey } from '@/hooks/useReactHooks'
 const StyledWrapper = styled.div`
   padding: 20px;
 `
 const StyledWindow = styled.div`
-  width: 640px;
-  height: 480px;
+  width: 300px;
+  height: 150px;
   border: solid 2px #eee;
   padding: 10px;
 
@@ -30,6 +30,61 @@ const Top: React.FC = () => {
     </StyledWrapper>
   )
 }
+const StyledControllerWrapper = styled.div`
+  width: 300px;
+  height: 150px;
+
+  padding: 20px;
+  padding-left: 50px;
+
+  display: flex;
+`
+const StyledButton = styled.button`
+  width: 110px;
+  height: 110px;
+  border-radius: 60px;
+  border: solid 5px #eee;
+  background-color: #f44;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const Controller: React.FC<{ selectCommand: (key: string) => void }> = ({
+  selectCommand,
+}) => {
+  return (
+    <StyledControllerWrapper>
+      <div>
+        <Triangle len={50} onClick={() => selectCommand('ArrowUp')} />
+        <Triangle
+          len={50}
+          style={{ transform: 'rotate(-180deg)', display: 'block' }}
+          onClick={() => selectCommand('ArrowDown')}
+        />
+      </div>
+      <div style={{ paddingLeft: '50px' }}>
+        <StyledButton onClick={() => selectCommand('Enter')}></StyledButton>
+      </div>
+    </StyledControllerWrapper>
+  )
+}
+
+const Triangle: React.FC<{
+  len: number
+  style?: CSSProperties
+  onClick?: () => void
+}> = ({ len, style, onClick }) => {
+  return (
+    <svg width={`${len}`} height={`${len}`} style={style} onClick={onClick}>
+      <path
+        d={`M${len / 2} 0 L0 ${len} L${len} ${len} Z`}
+        style={{ fill: '#999', stroke: 'white', strokeWidth: '3' }}
+      ></path>
+    </svg>
+  )
+}
 const Battle: React.FC<{ monsterData: Character; playerData: Character }> = ({
   monsterData,
   playerData,
@@ -37,14 +92,20 @@ const Battle: React.FC<{ monsterData: Character; playerData: Character }> = ({
   const [characters, setCharacters] = useState([playerData, monsterData])
   const player = characters[monsterType.MONSTER_PLAYER]
   const monster = characters[monsterType.MONSTER_SLIME]
-  const { message } = useHooks(characters)
+  const {
+    state: { message },
+    selectCommand,
+  } = useHooks(characters)
   return (
-    <StyledWindow>{`${player.name}
+    <div>
+      <StyledWindow>{`${player.name}
 HP:${player.hp}/${player.maxHp} MP:${player.mp}/${player.maxMp}
 
 ${monster.hp > 0 ? monster.aa : ''} ( HP: ${monster.hp}/${monster.maxHp} )
 
 ${message}`}</StyledWindow>
+      <Controller selectCommand={selectCommand} />
+    </div>
   )
 }
 export default Top
@@ -129,11 +190,10 @@ const useHooks = (characters: Character[]) => {
 
   const [gen] = useState(battleLoop(characters))
   const [state, setState] = useState({
-    message: `${monster.name} があらわれた！` + `\n\nEnterキーでスタート`,
+    message: `${monster.name} があらわれた！` + ``,
     player,
   })
-
-  useKey(['Enter', 'w', 's', 'ArrowDown', 'ArrowUp'], (key) => {
+  const selectCommand = (key: string) => {
     switch (key) {
       case 'Enter': {
         const nextState = gen.next(false).value
@@ -164,9 +224,11 @@ const useHooks = (characters: Character[]) => {
         return
       }
     }
-  })
+  }
 
-  return state
+  useKey(['Enter', 'w', 's', 'ArrowDown', 'ArrowUp'], selectCommand)
+
+  return { state, selectCommand }
 }
 
 function* battleLoop(characters: Character[]) {
