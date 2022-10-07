@@ -15,6 +15,10 @@ const StyledWindow = styled.div`
   white-space: pre-wrap;
   font-size: 16px;
   line-height: 1;
+
+  /* 単純な描画領域として扱うため余分なイベントを無効化 */
+  pointer-events: none;
+  user-select: none;
 `
 const Top: React.FC = () => {
   return (
