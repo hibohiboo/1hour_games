@@ -193,7 +193,10 @@ function* battleLoop(characters: Character[]) {
           }
           if (target.hp === 0) {
             return {
-              message: `${target.name} をたおした！`,
+              message:
+                player.name === 'ゆうしゃ'
+                  ? 'あなたは しにました'
+                  : `${target.name} をたおした！`,
               player,
             }
           }
