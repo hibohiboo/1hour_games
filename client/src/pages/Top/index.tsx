@@ -207,7 +207,12 @@ function* battleLoop(characters: Character[]) {
           return { message: `${player.name}は にげだした！`, player }
         }
         case commands.COMMAND_SPELL: {
+          if (player.mp < SPELL_COST) {
+            yield { message: `MPが たりない！`, player }
+            break
+          }
           player.mp -= SPELL_COST
+
           yield { message: `${player.name}は ヒールを となえた！`, player }
           player.hp = monsters[monsterType.MONSTER_PLAYER].maxHp
           yield { message: `${player.name}のきずが かいふくした！`, player }
