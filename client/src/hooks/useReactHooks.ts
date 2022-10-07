@@ -1,14 +1,10 @@
 import { useCallback, useEffect } from 'react'
-export const useKey = (keys: string[], handler: (key: string) => void) => {
+export const useKeyDown = (handler: (key: string) => void) => {
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      keys.forEach((key) => {
-        if (event.key === key) {
-          handler(key)
-        }
-      })
+      handler(event.key)
     },
-    [keys, handler],
+    [handler],
   )
 
   useEffect(() => {

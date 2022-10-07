@@ -1,6 +1,6 @@
 import React, { CSSProperties, useState } from 'react'
 import styled from 'styled-components'
-import { useKey } from '@/hooks/useReactHooks'
+import { useKeyDown } from '@/hooks/useReactHooks'
 const StyledWrapper = styled.div`
   padding: 20px;
 `
@@ -190,7 +190,7 @@ const useHooks = (characters: Character[]) => {
 
   const [gen] = useState(battleLoop(characters))
   const [state, setState] = useState({
-    message: `${monster.name} があらわれた！` + ``,
+    message: `${monster.name} があらわれた！`,
     player,
   })
   const selectCommand = (key: string) => {
@@ -226,7 +226,7 @@ const useHooks = (characters: Character[]) => {
     }
   }
 
-  useKey(['Enter', 'w', 's', 'ArrowDown', 'ArrowUp'], selectCommand)
+  useKeyDown(selectCommand)
 
   return { state, selectCommand }
 }
