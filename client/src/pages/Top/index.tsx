@@ -200,6 +200,10 @@ function* battleLoop(characters: Character[]) {
               player,
             }
           }
+          break
+        }
+        case commands.COMMAND_RUN: {
+          return { message: `ゆうしゃは にげだした！`, player }
         }
       }
     }
