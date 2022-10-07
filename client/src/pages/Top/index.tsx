@@ -83,12 +83,12 @@ const defaultMonster = {
 const monsters: readonly Character[] = [
   {
     ...defaultMonster,
-    hp: 15,
-    maxHp: 15,
+    hp: 100,
+    maxHp: 100,
     mp: 15,
     maxMp: 15,
     name: 'ゆうしゃ',
-    attack: 3,
+    attack: 30,
   },
   {
     ...defaultMonster,
