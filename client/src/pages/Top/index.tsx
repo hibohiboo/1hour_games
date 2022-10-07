@@ -203,7 +203,12 @@ function* battleLoop(characters: Character[]) {
           break
         }
         case commands.COMMAND_RUN: {
-          return { message: `ゆうしゃは にげだした！`, player }
+          return { message: `${player.name}は にげだした！`, player }
+        }
+        case commands.COMMAND_SPELL: {
+          yield { message: `${player.name}は ヒールを となえた！`, player }
+          player.hp = monsters[monsterType.MONSTER_PLAYER].maxHp
+          yield { message: `${player.name}のきずが かいふくした！`, player }
         }
       }
     }
