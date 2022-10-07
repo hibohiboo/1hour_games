@@ -12,7 +12,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   uid: undefined,
-  authenticated: undefined,
+  authenticated: true, // TODO: 認証をいれるまでは常に認証成功扱い
   error: undefined,
 }
 
