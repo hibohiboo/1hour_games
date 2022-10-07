@@ -7,18 +7,21 @@ const StyledWrapper = styled.div`
 const StyledWindow = styled.div`
   width: 640px;
   height: 480px;
-  font-family: 'DotGothic16', sans-serif;
-  white-space: pre-wrap;
   border: solid 2px #eee;
   padding: 10px;
+
+  /* レトロゲームコンソール風の文字に */
+  font-family: 'DotGothic16', sans-serif;
+  white-space: pre-wrap;
   font-size: 16px;
+  line-height: 1;
 `
 const Top: React.FC = () => {
   return (
     <StyledWrapper>
       <Battle
         playerData={monsters[monsterType.MONSTER_PLAYER]}
-        monsterData={monsters[monsterType.MONSTER_SLIME]}
+        monsterData={monsters[monsterType.MONSTER_BOSS]}
       />
     </StyledWrapper>
   )
@@ -55,7 +58,8 @@ interface Character {
 const monsterType = {
   MONSTER_PLAYER: 0,
   MONSTER_SLIME: 1,
-  MONSTER_MONSTER: 2,
+  MONSTER_BOSS: 2,
+  MONSTER_MONSTER: 3,
 } as const
 const commands = {
   COMMAND_FIGHT: 0,
@@ -94,6 +98,16 @@ const monsters: readonly Character[] = [
     aa: `／・Д・＼
 ～～～～～`,
     attack: 2,
+  },
+  {
+    ...defaultMonster,
+    hp: 255,
+    maxHp: 255,
+    attack: 50,
+    name: 'まおう',
+    // eslint-disable-next-line no-irregular-whitespace
+    aa: `　　Ａ＠Ａ
+ψ（▼皿▼）ψ`,
   },
 ] as const
 const selectCommandMessage = (
