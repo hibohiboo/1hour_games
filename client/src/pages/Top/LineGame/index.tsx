@@ -64,3 +64,17 @@ function drawField() {
   }
   return ret
 }
+
+function getLivingCellsCount(x: number, y: number): number {
+  let count = 0
+  // 隣接マスの確認
+  for (let j = y - 1; j <= y + 1; j++) {
+    if (j < 0 || j >= FIELD_HEIGHT) continue
+    for (let i = x - 1; i < x + 1; i++) {
+      if (x < 0 || x >= FIELD_WIDTH) continue
+      if (i === x && j === y) continue
+      count += field[j][i]
+    }
+  }
+  return count
+}
