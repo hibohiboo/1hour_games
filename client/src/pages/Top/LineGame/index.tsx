@@ -67,8 +67,6 @@ const field = defaultField.map((row, y) =>
 
 function stepSimuration(field: number[][]) {
   const nextField = shallowCopy(field)
-  console.log(field)
-  console.log(nextField)
   for (let y = 0; y < FIELD_HEIGHT; y++) {
     for (let x = 0; x < FIELD_WIDTH; x++) {
       const livingCellCount = getLivingCellsCountLoopField(x, y)
@@ -102,7 +100,7 @@ function getLivingCellsCount(x: number, y: number): number {
   // 隣接マスの確認
   for (let j = y - 1, lenY = y + 1; j <= lenY; j++) {
     if (j < 0 || j >= FIELD_HEIGHT) continue
-    for (let i = x - 1, lenX = x + 1; i < lenX; i++) {
+    for (let i = x - 1, lenX = x + 1; i <= lenX; i++) {
       if (x < 0 || x >= FIELD_WIDTH) continue
       if (i === x && j === y) continue
       count += field[j][i]
@@ -115,7 +113,7 @@ function getLivingCellsCountLoopField(x: number, y: number): number {
   // 隣接マスの確認
   for (let j = y - 1, lenY = y + 1; j <= lenY; j++) {
     const roopedY = (FIELD_HEIGHT + j) % FIELD_HEIGHT
-    for (let i = x - 1, lenX = x + 1; i < lenX; i++) {
+    for (let i = x - 1, lenX = x + 1; i <= lenX; i++) {
       const roopedX = (FIELD_WIDTH + i) % FIELD_WIDTH
       if (x === roopedX && y === roopedY) continue
       count += field[roopedY][roopedX]
