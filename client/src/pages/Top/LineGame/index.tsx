@@ -42,7 +42,7 @@ const useHooks = () => {
     if (nextState) setState(nextState)
   }, [setState, gen])
 
-  useTimeout(500, isRunning, nextState)
+  useTimeout(100, isRunning, nextState)
 
   const start = () => {
     setIsRunning(true)
@@ -70,9 +70,14 @@ const defaultField: number[][] = new Array(FIELD_HEIGHT).fill(
   new Array(FIELD_WIDTH).fill(0),
 )
 const seed = [
+  // // グライダー
+  // [0, 1, 0],
+  // [0, 0, 1],
+  // [1, 1, 1],
+  // Rべんとみの
+  [0, 1, 1],
+  [1, 1, 0],
   [0, 1, 0],
-  [0, 0, 1],
-  [1, 1, 1],
 ]
 const field = defaultField.map((row, y) =>
   row.map((col, x) => (seed[y] && seed[y][x]) || 0),
