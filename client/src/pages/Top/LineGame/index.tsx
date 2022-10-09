@@ -25,6 +25,8 @@ const LifeGame: React.FC = () => {
     <StyledWrapper>
       <StyledConsole>{hooks.state}</StyledConsole>
       <button onClick={hooks.nextState}> 次の世代</button>
+      <button onClick={hooks.start}> 開始</button>
+      <button onClick={hooks.stop}> 終了</button>
     </StyledWrapper>
   )
 }
@@ -33,13 +35,22 @@ export default LifeGame
 const useHooks = () => {
   const [gen] = useState(mainLoop())
   const [state, setState] = useState<string>('')
+  const [isRunning, setIsRunning] = useState(false)
   const nextState = () => {
     const nextState = gen.next().value
     // console.log(nextState)
     if (nextState) setState(nextState)
   }
 
-  return { state, nextState }
+  useAnimationFrame(isRunning, nextState)
+
+  const start = () => {
+    setIsRunning(true)
+  }
+  const stop = () => {
+    setIsRunning(false)
+  }
+  return { state, nextState, start, stop }
 }
 const shallowCopy = (obj: any) => JSON.parse(JSON.stringify(obj))
 
@@ -129,4 +140,25 @@ function getLivingCellsCountLoopField(
     }
   }
   return count
+}
+
+const useAnimationFrame = (
+  isRunning: boolean,
+  callback: (t: number) => void,
+) => {
+  const reqIdRef = React.useRef(0)
+  const loop = React.useCallback(
+    (timestamp: number) => {
+      if (isRunning) {
+        reqIdRef.current = requestAnimationFrame(loop)
+        callback(timestamp)
+      }
+    },
+    [isRunning, callback],
+  )
+
+  React.useEffect(() => {
+    reqIdRef.current = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(reqIdRef.current)
+  }, [loop])
 }
