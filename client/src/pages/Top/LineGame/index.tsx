@@ -36,13 +36,13 @@ const useHooks = () => {
   const [gen] = useState(mainLoop())
   const [state, setState] = useState<string>('')
   const [isRunning, setIsRunning] = useState(false)
-  const nextState = () => {
+  const nextState = React.useCallback(() => {
     const nextState = gen.next().value
     // console.log(nextState)
     if (nextState) setState(nextState)
-  }
+  }, [setState, gen])
 
-  useAnimationFrame(isRunning, nextState)
+  useTimeout(500, isRunning, nextState)
 
   const start = () => {
     setIsRunning(true)
@@ -160,5 +160,24 @@ const useAnimationFrame = (
   React.useEffect(() => {
     reqIdRef.current = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(reqIdRef.current)
+  }, [loop])
+}
+
+const useTimeout = (
+  interval: number,
+  isRunning: boolean,
+  callback: () => void,
+) => {
+  const reqIdRef = React.useRef(0)
+  const loop = React.useCallback(() => {
+    if (isRunning) {
+      callback()
+    }
+    reqIdRef.current = setTimeout(loop, interval) as any as number
+  }, [isRunning, callback, interval])
+
+  React.useEffect(() => {
+    loop()
+    return () => clearTimeout(reqIdRef.current)
   }, [loop])
 }
