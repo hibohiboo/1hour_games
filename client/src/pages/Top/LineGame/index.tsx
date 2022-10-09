@@ -32,10 +32,10 @@ export default LifeGame
 
 const useHooks = () => {
   const [gen] = useState(mainLoop())
-  const [state, setState] = useState<string>(gen.next().value || '')
+  const [state, setState] = useState<string>('')
   const nextState = () => {
     const nextState = gen.next().value
-    console.log(nextState)
+    // console.log(nextState)
     if (nextState) setState(nextState)
   }
 
@@ -45,9 +45,11 @@ const shallowCopy = (obj: any) => JSON.parse(JSON.stringify(obj))
 
 function* mainLoop() {
   let f = shallowCopy(field)
+  let loopCount = 0
   yield drawField(f)
   while (true) {
     f = stepSimuration(f)
+    console.log(loopCount++)
     yield drawField(f)
   }
 }
@@ -65,17 +67,18 @@ const field = defaultField.map((row, y) =>
   row.map((col, x) => (seed[y] && seed[y][x]) || 0),
 )
 
-function stepSimuration(field: number[][]) {
-  const nextField = shallowCopy(field)
+function stepSimuration(f: number[][]) {
+  const nextField = shallowCopy(f)
   for (let y = 0; y < FIELD_HEIGHT; y++) {
     for (let x = 0; x < FIELD_WIDTH; x++) {
       const livingCellCount = getLivingCellsCountLoopField(x, y)
-      // console.log(`${x},${y}:`, livingCellCount)
+
       if (livingCellCount <= 1) {
         nextField[y][x] = 0
       } else if (livingCellCount === 2) {
-        nextField[y][x] = field[y][x]
+        nextField[y][x] = f[y][x]
       } else if (livingCellCount === 3) {
+        // console.log(`${x},${y}:`, livingCellCount)
         nextField[y][x] = 1
       } else {
         nextField[y][x] = 0
