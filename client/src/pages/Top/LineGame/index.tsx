@@ -71,7 +71,7 @@ function stepSimuration(f: number[][]) {
   const nextField = shallowCopy(f)
   for (let y = 0; y < FIELD_HEIGHT; y++) {
     for (let x = 0; x < FIELD_WIDTH; x++) {
-      const livingCellCount = getLivingCellsCountLoopField(x, y)
+      const livingCellCount = getLivingCellsCountLoopField(x, y, f)
 
       if (livingCellCount <= 1) {
         nextField[y][x] = 0
@@ -111,7 +111,13 @@ function getLivingCellsCount(x: number, y: number): number {
   }
   return count
 }
-function getLivingCellsCountLoopField(x: number, y: number): number {
+function getLivingCellsCountLoopField(
+  x: number,
+  y: number,
+  field: number[][],
+): number {
+  const FIELD_HEIGHT = field.length
+  const FIELD_WIDTH = field[0].length
   let count = 0
   // 隣接マスの確認
   for (let j = y - 1, lenY = y + 1; j <= lenY; j++) {
