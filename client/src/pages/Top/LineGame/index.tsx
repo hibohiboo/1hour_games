@@ -41,20 +41,52 @@ const useHooks = () => {
 
   return { state, nextState }
 }
+const shallowCopy = (obj: any) => JSON.parse(JSON.stringify(obj))
 
 function* mainLoop() {
+  let f = shallowCopy(field)
+  yield drawField(f)
   while (true) {
-    yield drawField()
+    f = stepSimuration(f)
+    yield drawField(f)
   }
 }
-const FIELD_WIDTH = 3
-const FIELD_HEIGHT = 3
-const field = [
-  [0, 1, 0],
+const FIELD_WIDTH = 12
+const FIELD_HEIGHT = 12
+const defaultField: number[][] = new Array(FIELD_HEIGHT).fill(
+  new Array(FIELD_WIDTH).fill(0),
+)
+const seed = [
+  [0, 1, 1],
   [0, 0, 1],
   [1, 1, 1],
 ]
-function drawField() {
+const field = defaultField.map((row, y) =>
+  row.map((col, x) => (seed[y] && seed[y][x]) || 0),
+)
+
+function stepSimuration(field: number[][]) {
+  const nextField = shallowCopy(field)
+  console.log(field)
+  console.log(nextField)
+  for (let y = 0; y < FIELD_HEIGHT; y++) {
+    for (let x = 0; x < FIELD_WIDTH; x++) {
+      const livingCellCount = getLivingCellsCount(x, y)
+      // console.log(`${x},${y}:`, livingCellCount)
+      if (livingCellCount <= 1) {
+        nextField[y][x] = 0
+      } else if (livingCellCount === 2) {
+        nextField[y][x] = field[y][x]
+      } else if (livingCellCount === 3) {
+        nextField[y][x] = 1
+      } else {
+        nextField[y][x] = 0
+      }
+    }
+  }
+  return nextField
+}
+function drawField(field: number[][]) {
   let ret = ''
   for (let y = 0; y < FIELD_HEIGHT; y++) {
     for (let x = 0; x < FIELD_WIDTH; x++) {
@@ -68,9 +100,9 @@ function drawField() {
 function getLivingCellsCount(x: number, y: number): number {
   let count = 0
   // 隣接マスの確認
-  for (let j = y - 1; j <= y + 1; j++) {
+  for (let j = y - 1, lenY = y + 1; j <= lenY; j++) {
     if (j < 0 || j >= FIELD_HEIGHT) continue
-    for (let i = x - 1; i < x + 1; i++) {
+    for (let i = x - 1, lenX = x + 1; i < lenX; i++) {
       if (x < 0 || x >= FIELD_WIDTH) continue
       if (i === x && j === y) continue
       count += field[j][i]
